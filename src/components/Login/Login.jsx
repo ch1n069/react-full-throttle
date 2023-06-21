@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
@@ -11,20 +11,37 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
+  //side effect to check if the form is valid
+  //side effects are http requests, timers, event listeners, checking form validity
+  useEffect(() => {
+    // this is to make the check happen after 5 milliseconds
+    const identifier = setTimeout(() => {
+      console.log("Checking form validity!");
+      setFormIsValid(
+        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      );
+    }, 500);
+    // a clean up function
+    return () => {
+      console.log("CLEANUP");
+      // clear the timer if the user is still typing
+      clearTimeout(identifier);
+    };
+  }, [enteredEmail, enteredPassword]);
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
 
-    setFormIsValid(
-      event.target.value.includes("@") && enteredPassword.trim().length > 6
-    );
+    // setFormIsValid(
+    //   event.target.value.includes("@") && enteredPassword.trim().length > 6
+    // );
   };
 
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
 
-    setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes("@")
-    );
+    // setFormIsValid(
+    //   event.target.value.trim().length > 6 && enteredEmail.includes("@")
+    // );
   };
 
   const validateEmailHandler = () => {
