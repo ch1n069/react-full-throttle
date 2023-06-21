@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Login from "./components/Login/Login";
 import Home from "./components/Home/Home";
@@ -6,6 +6,12 @@ import MainHeader from "./components/MainHeader/MainHeader";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const storedUserLoggedInInformation = localStorage.getItem("isLoggedIn");
+    if (storedUserLoggedInInformation === "1") {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const loginHandler = (email, password) => {
     // We should of course check email and password
@@ -15,7 +21,7 @@ function App() {
   };
 
   const logoutHandler = () => {
-    // setting logged in status in the lcocal storage
+    // removing the logged in user status g
     localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
   };
