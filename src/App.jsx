@@ -10,10 +10,13 @@ function App() {
   const loginHandler = (email, password) => {
     // We should of course check email and password
     // But it's just a dummy/ demo anyways
+    localStorage.setItem("isLoggedIn", "1");
     setIsLoggedIn(true);
   };
 
   const logoutHandler = () => {
+    // setting logged in status in the lcocal storage
+    localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
   };
 
