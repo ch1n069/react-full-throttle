@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import emailReducer from "../../context/reducer/emailReducer";
 
 const Login = (props) => {
   const [enteredEmail, setEnteredEmail] = useState("");
@@ -10,7 +11,7 @@ const Login = (props) => {
   const [enteredPassword, setEnteredPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
-
+  const [userEnteredEmail, dispatch] = useReducer(emailReducer);
   //side effect to check if the form is valid
   //side effects are http requests, timers, event listeners, checking form validity
   useEffect(() => {
