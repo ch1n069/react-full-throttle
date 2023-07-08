@@ -17,6 +17,11 @@ const Login = (props) => {
     value: "",
     isValid: undefined,
   });
+  // reducer for the password input
+  const [userEnteredPassword, dispatchPassword] = useReducer(passWordReducer, {
+    value: "",
+    isValid: undefined,
+  });
   //side effect to check if the form is valid
   //side effects are http requests, timers, event listeners, checking form validity
   useEffect(() => {
