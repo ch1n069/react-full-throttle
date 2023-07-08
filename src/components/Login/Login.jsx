@@ -9,8 +9,8 @@ import passwordReducer from "../../context/reducer/passwordReducer";
 const Login = (props) => {
   // const [enteredEmail, setEnteredEmail] = useState("");
   // const [emailIsValid, setEmailIsValid] = useState();
-  const [enteredPassword, setEnteredPassword] = useState("");
-  const [passwordIsValid, setPasswordIsValid] = useState();
+  // const [enteredPassword, setEnteredPassword] = useState("");
+  // const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
   // our reducer
@@ -31,7 +31,7 @@ const Login = (props) => {
       console.log("Checking form validity!");
       setFormIsValid(
         userEnteredEmail.value.includes("@") &&
-          enteredPassword.trim().length > 6
+          userEnteredPassword.value.trim().length > 6
       );
     }, 500);
     // a clean up function
@@ -40,7 +40,7 @@ const Login = (props) => {
       // clear the timer if the user is still typing
       clearTimeout(identifier);
     };
-  }, [userEnteredEmail, enteredPassword]);
+  }, [userEnteredEmail, userEnteredPassword]);
 
   // grab the value of the entered email
   const emailChangeHandler = (e) => {
@@ -53,8 +53,12 @@ const Login = (props) => {
     // );
   };
 
+  // grab the value for the entered password
   const passwordChangeHandler = (event) => {
-    setEnteredPassword(event.target.value);
+    dispatchPassword({
+      type: "USER_ENTERED_PASSWORD",
+      payload: event.target.value,
+    });
 
     setFormIsValid(
       userEnteredEmail.isValid &&
@@ -68,12 +72,12 @@ const Login = (props) => {
   };
 
   const validatePasswordHandler = () => {
-    setPasswordIsValid(enteredPassword.trim().length > 6);
+    dispatchPassword({ type: "USER_ENTERED_PASSWORD_BLUR" });
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(userEnteredEmail.value, enteredPassword);
+    props.onLogin(userEnteredEmail.value, userEnteredPassword.value);
   };
 
   return (
@@ -95,14 +99,14 @@ const Login = (props) => {
         </div>
         <div
           className={`${classes.control} ${
-            passwordIsValid === false ? classes.invalid : ""
+            userEnteredPassword.isValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
-            value={enteredPassword}
+            value={userEnteredPassword.value}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />
