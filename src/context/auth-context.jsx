@@ -7,6 +7,7 @@ const AuthContext = React.createContext({
   onLogout: () => {},
   onLogin: (email, password) => {},
 });
+import PropTypes from "prop-types";
 
 export const AuthContextProvider = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,6 +43,9 @@ export const AuthContextProvider = (props) => {
       {props.children}
     </AuthContext.Provider>
   );
+};
+AuthContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default AuthContext;
