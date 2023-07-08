@@ -3,10 +3,8 @@ import React, { useState, useEffect, useReducer } from "react";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
-import {
-  emailReducer,
-  passwordReducer,
-} from "../../context/reducer/emailReducer";
+import emailReducer from "../../context/reducer/emailReducer";
+import passwordReducer from "../../context/reducer/passwordReducer";
 
 const Login = (props) => {
   // const [enteredEmail, setEnteredEmail] = useState("");
@@ -56,17 +54,12 @@ const Login = (props) => {
   };
 
   const passwordChangeHandler = (event) => {
-    // making use of the reducer where we pass in the type and the payload
-    dispatchPassword({
-      type: "USER_INPUT_PASSWORD",
-      payload: event.target.value,
-    });
+    setEnteredPassword(event.target.value);
 
     setFormIsValid(
       userEnteredEmail.isValid &&
         userEnteredEmail.value.includes("@") &&
-        // checking the lenghth of the password
-        userEnteredPassword.trim().length > 6
+        event.target.value.trim().length > 6
     );
   };
 
