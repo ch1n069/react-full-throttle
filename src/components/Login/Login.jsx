@@ -11,6 +11,7 @@ const Login = (props) => {
   // const [emailIsValid, setEmailIsValid] = useState();
   // const [enteredPassword, setEnteredPassword] = useState("");
   // const [passwordIsValid, setPasswordIsValid] = useState();
+
   const [formIsValid, setFormIsValid] = useState(false);
 
   // our reducer
@@ -23,16 +24,17 @@ const Login = (props) => {
     value: "",
     isValid: undefined,
   });
-  //side effect to check if the form is valid
+  //side effect
+  // make use of alias alias assignemer
+  const { isValid: emailIsValid1 } = userEnteredEmail;
+  const { isValid: passwordIsValid } = userEnteredPassword;
+  //to check if the form is valid
   //side effects are http requests, timers, event listeners, checking form validity
   useEffect(() => {
     // this is to make the check happen after 5 milliseconds
     const identifier = setTimeout(() => {
       console.log("Checking form validity!");
-      setFormIsValid(
-        userEnteredEmail.value.includes("@") &&
-          userEnteredPassword.value.trim().length > 6
-      );
+      setFormIsValid(emailIsValid1 && passwordIsValid);
     }, 500);
     // a clean up function
     return () => {
@@ -40,7 +42,7 @@ const Login = (props) => {
       // clear the timer if the user is still typing
       clearTimeout(identifier);
     };
-  }, [userEnteredEmail, userEnteredPassword]);
+  }, [emailIsValid1, passwordIsValid]);
 
   // grab the value of the entered email
   const emailChangeHandler = (e) => {
