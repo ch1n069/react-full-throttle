@@ -3,9 +3,11 @@ const emailReducer = (state, action) => {
   switch (action.type) {
     case "USER_INPUT":
       return { value: action.payload, isValid: action.payload.includes("@") };
+    case "INPUT_BLUR":
+      return { value: state.value, isValid: state.value.includes("@") };
 
     default:
-      return state;
+      return { value: "", isValid: undefined };
   }
 };
 

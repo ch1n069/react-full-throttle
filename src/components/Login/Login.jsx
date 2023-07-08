@@ -6,12 +6,17 @@ import Button from "../UI/Button/Button";
 import emailReducer from "../../context/reducer/emailReducer";
 
 const Login = (props) => {
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [emailIsValid, setEmailIsValid] = useState();
+  // const [enteredEmail, setEnteredEmail] = useState("");
+  // const [emailIsValid, setEmailIsValid] = useState();
   const [enteredPassword, setEnteredPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
-  const [userEnteredEmail, dispatch] = useReducer(emailReducer);
+
+  // our reducer
+  const [userEnteredEmail, dispatchEmail] = useReducer(emailReducer, {
+    value: "",
+    isValid: undefined,
+  });
   //side effect to check if the form is valid
   //side effects are http requests, timers, event listeners, checking form validity
   useEffect(() => {
@@ -19,7 +24,8 @@ const Login = (props) => {
     const identifier = setTimeout(() => {
       console.log("Checking form validity!");
       setFormIsValid(
-        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+        userEnteredEmail.value.includes("@") &&
+          enteredPassword.trim().length > 6
       );
     }, 500);
     // a clean up function
@@ -28,9 +34,13 @@ const Login = (props) => {
       // clear the timer if the user is still typing
       clearTimeout(identifier);
     };
-  }, [enteredEmail, enteredPassword]);
-  const emailChangeHandler = (event) => {
-    setEnteredEmail(event.target.value);
+  }, [userEnteredEmail, enteredPassword]);
+
+  // grab the value of the entered email
+  const emailChangeHandler = (e) => {
+    // make use of our dispatch function
+    // which takes in an object and the payload from the field
+    dispatchEmail({ type: "USER_INPUT", payload: e.target.value });
 
     // setFormIsValid(
     //   event.target.value.includes("@") && enteredPassword.trim().length > 6
@@ -40,13 +50,15 @@ const Login = (props) => {
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
 
-    // setFormIsValid(
-    //   event.target.value.trim().length > 6 && enteredEmail.includes("@")
-    // );
+    setFormIsValid(
+      userEnteredEmail.isValid &&
+        userEnteredEmail.value.includes("@") &&
+        event.target.value.trim().length > 6
+    );
   };
 
   const validateEmailHandler = () => {
-    setEmailIsValid(enteredEmail.includes("@"));
+    dispatchEmail({ type: "INPUT_BLUR" });
   };
 
   const validatePasswordHandler = () => {
@@ -55,7 +67,7 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword);
+    props.onLogin(userEnteredEmail.value, enteredPassword);
   };
 
   return (
@@ -63,14 +75,14 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailIsValid === false ? classes.invalid : ""
+            userEnteredEmail.isValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
           <input
             type="email"
             id="email"
-            value={enteredEmail}
+            value={userEnteredEmail.value}
             onChange={emailChangeHandler}
             onBlur={validateEmailHandler}
           />
